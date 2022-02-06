@@ -12,7 +12,8 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
   res.status(200).send({
-    message: "POST request from sample router"
+    message: "POST request from sample router",
+    payload: req.body
   });
 });
 
