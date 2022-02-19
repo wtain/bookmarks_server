@@ -1,7 +1,7 @@
 
 import { Router, Request, Application } from 'express';
 import { MongoClient } from 'mongodb';
-import { BOOKMARKS_ENDPOINT_ADD, BOOKMARKS_ENDPOINT_BASE, BOOKMARKS_ENDPOINT_DELETE, BOOKMARKS_ENDPOINT_GETBYTAG, BOOKMARKS_ENDPOINT_UPDATE } from '../../constants/endpoint';
+import { BOOKMARKS_ENDPOINT_ADD, BOOKMARKS_ENDPOINT_BASE, BOOKMARKS_ENDPOINT_DELETE, BOOKMARKS_ENDPOINT_GETBYID, BOOKMARKS_ENDPOINT_GETBYTAG, BOOKMARKS_ENDPOINT_UPDATE } from '../../constants/endpoint';
 import { COLLECTION_NAME, DB_NAME } from '../../constants/storage';
 
 export const router: Router = Router();
@@ -39,9 +39,6 @@ router.get(BOOKMARKS_ENDPOINT_BASE + "/", async (req, res) => {
     res.status(200).send(bookmarks);
   });
 
-
-// db.bookmarks.find({"tags": {$elemMatch: {"name": 'UI'}}})
-
 router.get(BOOKMARKS_ENDPOINT_GETBYTAG + "/", async (req: Request<{tag: string}>, res) => {
     const bookmarks = await getBookmarksCollection(req)
                 .find({"tags": {"$elemMatch": {"name": req.params.tag}}})
@@ -49,3 +46,10 @@ router.get(BOOKMARKS_ENDPOINT_GETBYTAG + "/", async (req: Request<{tag: string}>
     console.info(bookmarks);
     res.status(200).send(bookmarks);
   });
+
+router.get(BOOKMARKS_ENDPOINT_GETBYID + "/", async (req: Request<{id: string}>, res) => {
+    const bookmark = await getBookmarksCollection(req)
+            .findOne({"id": req.params.id});
+    console.info(bookmark);
+    res.status(200).send(bookmark);
+});
