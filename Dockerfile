@@ -1,4 +1,5 @@
 FROM node:16
+ENV DATABASE mongodb://host.docker.internal:27017
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install

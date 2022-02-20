@@ -7,7 +7,7 @@ import WebSocket from "ws";
 
 const port = Number(process.env.PORT || config.PORT || 8080);
 
-MongoClient.connect(DB_CONN_STRING, (err, db) => {
+MongoClient.connect(process.env.DATABASE || DB_CONN_STRING, (err, db) => {
   if (err) {
     console.warn(`Failed to connect to the database. ${err.stack}`);
   }
