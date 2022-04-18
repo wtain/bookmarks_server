@@ -16,3 +16,5 @@ export const BOOKMARKS_ENDPOINT_GETBYTAG = BOOKMARKS_ENDPOINT_BASE + "/bytag/:ta
 export const BOOKMARKS_ENDPOINT_GETBYID = BOOKMARKS_ENDPOINT_BASE + "/:id";
 
 export const TAGS_ENDPOINT_BASE = BASE_ENDPOINT + "/tags";
+
+export const TAGS_ENDPOINT_SEARCH = TAGS_ENDPOINT_BASE + "/search/:substring";
