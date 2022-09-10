@@ -1,4 +1,24 @@
 
+### Setup
+
+Install Typescript
+```bash
+npm install -g typescript
+```
+
+Add path to NPM bin to user environment variables:
+(Windows) Add to ``PATH`` value ``C:\Users\<USER_NAME_HERE>\AppData\Roaming\npm``
+
+Install dependencies
+```bash
+npm i
+```
+
+### Building
+```bash
+npm run build
+```
+
 ### Testing endpoints
 
 ```
