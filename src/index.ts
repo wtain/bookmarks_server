@@ -14,11 +14,12 @@ MongoClient.connect(process.env.DATABASE || DB_CONN_STRING, (err, db) => {
   app.locals.db = db;
 
   // Start the application by listening to specific port
-  app.listen(port, () => {
+  const server = app.listen(port, () => {
     console.info('Express application started on port: ' + port);
   });
 
-  const server = http.createServer(app);
+  console.info("Starting Websocket server");
+  // const server = http.createServer(app);
   const wss = new WebSocket.Server({ server });
 
   server.on('upgrade', function upgrade(request, socket, head) {
@@ -44,6 +45,10 @@ MongoClient.connect(process.env.DATABASE || DB_CONN_STRING, (err, db) => {
         ws.send(`Hello, you sent -> ${message}`);
     });
 
+    setInterval(() => {
+      ws.send("Keep alive message");
+    }, 1000);
+
     ws.send('Hi there, I am a WebSocket server');
   });
   
@@ -52,6 +57,6 @@ MongoClient.connect(process.env.DATABASE || DB_CONN_STRING, (err, db) => {
 
 
 function authenticate(request: http.IncomingMessage, arg1: (err: any, client: any) => void) {
-  throw new Error('Function not implemented.');
+  // throw new Error('Function not implemented.');
 }
 
