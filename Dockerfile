@@ -26,6 +26,6 @@ COPY . ./
 # Debug container
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
-EXPOSE 8080
+EXPOSE 8080 5000 3000
 
 CMD [ "node", "build/src/index.js" ]
