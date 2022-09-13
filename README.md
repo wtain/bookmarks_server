@@ -14,6 +14,10 @@ Install dependencies
 npm i
 ```
 
+```bash
+npm i -g ts-node
+```
+
 ### Building
 ```bash
 npm run build

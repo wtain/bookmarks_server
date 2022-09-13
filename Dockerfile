@@ -26,8 +26,13 @@ COPY . ./
 # Debug container
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
 
-RUN npm run build
+# RUN npm run build
 
 EXPOSE 8080 5000 3000
 
-CMD [ "node", "build/src/index.js" ]
+# CMD [ "node", "build/src/index.js" ]
+
+# https://medium.com/@kartikio/setup-node-ts-local-development-environment-with-docker-and-hot-reloading-922db9016119
+# CMD ["npm", "run", "start:dev"]
+
+CMD ["npm", "run", "dev:nodemon"]

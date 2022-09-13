@@ -1,5 +1,5 @@
 import { Router, Request, Application } from 'express';
-import { TAGS_ENDPOINT_BASE, TAGS_ENDPOINT_SEARCH } from '../../constants/endpoint';
+import { BASE_ENDPOINT, TAGS_ENDPOINT_BASE, TAGS_ENDPOINT_SEARCH } from '../../constants/endpoint';
 import { getBookmarksCollection } from './bookmarks.router';
 
 export const router: Router = Router();
@@ -37,4 +37,8 @@ router.get(TAGS_ENDPOINT_SEARCH + "/", async (req: Request<{substring: string}>,
         .searchTags(req.params.substring);
     console.info(tags);
     res.status(200).send(tags);
+});
+
+router.get(TAGS_ENDPOINT_BASE + "/test", async (req, res) => {
+    res.status(200).send("test 1");
 });
