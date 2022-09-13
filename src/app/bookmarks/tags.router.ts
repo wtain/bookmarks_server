@@ -26,28 +26,15 @@ db.bookmarks.aggregate([
 
 router.get(TAGS_ENDPOINT_BASE + "/", async (req, res) => {
     const tags = await getBookmarksCollection(req)
-                .aggregate([
-                    { "$project": { "tags.name": 1, _id: 0 } }, 
-                    { "$unwind": "$tags" }, 
-                    { "$project": { "name": "$tags.name" } }, 
-                    { "$group": { _id: null, tags: { "$addToSet": "$name" } } }, 
-                    { "$project": { tags: 1, _id: 0 } }
-                ]).toArray();
+        .listTags();
     console.info(tags);
     res.status(200).send(tags);
   });
 
 
 router.get(TAGS_ENDPOINT_SEARCH + "/", async (req: Request<{substring: string}>, res) => {
-const tags = await getBookmarksCollection(req)
-            .aggregate([
-                { "$project": { "tags.name": 1, _id: 0 } }, 
-                { "$unwind": "$tags" }, 
-                { "$project": { "name": "$tags.name" } }, 
-                { "$match": {"name": { "$regex": ".*" + req.params.substring + ".*", '$options' : 'i' } } },
-                { "$group": { _id: null, tags: { "$addToSet": "$name" } } }, 
-                { "$project": { tags: 1, _id: 0 } }
-            ]).toArray();
-console.info(tags);
-res.status(200).send(tags);
+    const tags = await getBookmarksCollection(req)
+        .searchTags(req.params.substring);
+    console.info(tags);
+    res.status(200).send(tags);
 });
