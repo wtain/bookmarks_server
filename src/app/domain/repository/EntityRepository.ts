@@ -1,5 +1,6 @@
 import { Application } from "express";
 import { Collection, MongoClient } from "mongodb";
+import Entity from "./Entity";
 
 class EntityRepository {
 
@@ -23,7 +24,7 @@ class EntityRepository {
     return result;
   }
 
-  public async update(body: { id: string }) {
+  public async update(body: Entity) {
     const result = await this.entityCollection
       .updateOne(
         { "id": body.id },

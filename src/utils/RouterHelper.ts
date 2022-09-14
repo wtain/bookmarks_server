@@ -1,9 +1,10 @@
 import { Router, Request } from "express";
+import Entity from "../app/domain/repository/Entity";
 import CrudEndpoints from "./CrudEndpoints";
 import RepositoryProvider from "./RepositoryProvider";
 
 export function addCRUDEndpoints(router: Router, crudEndpoints: CrudEndpoints, repositoryProvider: RepositoryProvider) {
-  router.delete(crudEndpoints.delete, async (req: Request<{id: string}>, res) => {
+  router.delete(crudEndpoints.delete, async (req: Request<Entity>, res) => {
     const result = await repositoryProvider(req)
         .delete(req.params.id);
     res
@@ -20,7 +21,7 @@ export function addCRUDEndpoints(router: Router, crudEndpoints: CrudEndpoints, r
   });
 
   router.put(crudEndpoints.update, async (req, res) => {
-    const body = <{id: string}>req.body;
+    const body = <Entity>req.body;
     delete req.body._id;
     const result = await repositoryProvider(req)
         .update(body);
@@ -37,7 +38,7 @@ export function addCRUDEndpoints(router: Router, crudEndpoints: CrudEndpoints, r
         .send(bookmarks);
   });
     
-  router.get(crudEndpoints.get, async (req: Request<{id: string}>, res) => {
+  router.get(crudEndpoints.get, async (req: Request<Entity>, res) => {
     const bookmark = await repositoryProvider(req)
         .getById(req.params.id);
     res
