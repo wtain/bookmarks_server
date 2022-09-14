@@ -1,5 +1,5 @@
-import { Router, Request, Application } from 'express';
-import { BASE_ENDPOINT, TAGS_ENDPOINT_BASE, TAGS_ENDPOINT_SEARCH } from '../../constants/endpoint';
+import { Router, Request } from 'express';
+import { TAGS_ENDPOINT_BASE, TAGS_ENDPOINT_SEARCH } from '../../constants/endpoint';
 import { getBookmarksCollection } from './bookmarks.router';
 
 export const router: Router = Router();
@@ -27,7 +27,6 @@ db.bookmarks.aggregate([
 router.get(TAGS_ENDPOINT_BASE + "/", async (req, res) => {
     const tags = await getBookmarksCollection(req)
         .listTags();
-    console.info(tags);
     res.status(200).send(tags);
   });
 
@@ -35,10 +34,13 @@ router.get(TAGS_ENDPOINT_BASE + "/", async (req, res) => {
 router.get(TAGS_ENDPOINT_SEARCH + "/", async (req: Request<{substring: string}>, res) => {
     const tags = await getBookmarksCollection(req)
         .searchTags(req.params.substring);
-    console.info(tags);
-    res.status(200).send(tags);
+    res
+        .status(200)
+        .send(tags);
 });
 
 router.get(TAGS_ENDPOINT_BASE + "/test", async (req, res) => {
-    res.status(200).send("test 1");
+    res
+        .status(200)
+        .send("test 1");
 });

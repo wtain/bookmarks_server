@@ -1,52 +1,22 @@
 import { Application } from "express";
-import { Collection, MongoClient } from "mongodb";
-import { COLLECTION_NAME, DB_NAME } from "../../../constants/storage";
+import { BOOKMARKS_COLLECTION_NAME, DB_NAME } from "../../../constants/storage";
+import EntityRepository from "./EntityRepository";
 
-class BookmarksRepository {
+class BookmarksRepository extends EntityRepository {
 
-  private bookmarksCollection: Collection;
-
-  constructor(private app: Application) {
-    const db: MongoClient = app.locals.db as MongoClient;
-    const bmdb = db.db(DB_NAME);
-    this.bookmarksCollection = bmdb.collection(COLLECTION_NAME);
-  }
-
-  public async delete(id: string) {
-    const result = await this.bookmarksCollection.deleteOne({ "id": id });
-    return result;
-  }
-
-  public async add(body: any) {
-    const result = await this.bookmarksCollection.insertOne(body);
-    return result;
-  }
-
-  public async update(body: { id: string }) {
-    const result = await this.bookmarksCollection.updateOne({"id": body.id}, {$set: body});
-    return result;
-  }
-
-  public async list() {
-    const bookmarks = await this.bookmarksCollection.find().toArray();
-    return bookmarks;
+  constructor(app: Application) {
+    super(app, DB_NAME, BOOKMARKS_COLLECTION_NAME);
   }
 
   public async listByTag(tag: string) {
-    const bookmarks = await this.bookmarksCollection
+    const bookmarks = await this.entityCollection
       .find({"tags": {"$elemMatch": {"name": tag}}})
       .toArray();
     return bookmarks;
   }
 
-  public async getById(id: string) {
-    const bookmark = await this.bookmarksCollection
-      .findOne({ "id": id });
-    return bookmark;
-  }
-
   public async listTags() {
-    const tags = await this.bookmarksCollection
+    const tags = await this.entityCollection
                     .aggregate([
                       { "$project": { "tags.name": 1, _id: 0 } }, 
                       { "$unwind": "$tags" }, 
@@ -58,7 +28,7 @@ class BookmarksRepository {
   }
 
   public async searchTags(substring: string) {
-    const tags = await this.bookmarksCollection
+    const tags = await this.entityCollection
                     .aggregate([
                       { "$project": { "tags.name": 1, _id: 0 } }, 
                       { "$unwind": "$tags" }, 
