@@ -1,5 +1,6 @@
 import { Application } from "express";
 import { BOOKMARKS_COLLECTION_NAME, DB_NAME } from "../../../constants/storage";
+import { addDays } from "../../../utils/DateHelpers";
 import EntityRepository from "./EntityRepository";
 
 class BookmarksRepository extends EntityRepository {
@@ -15,12 +16,21 @@ class BookmarksRepository extends EntityRepository {
     return bookmarks;
   }
 
-  public async listByDate(date: string) {
+  public async listByDate(date: Date) {
     // todo: implement
     // db.bookmarks.find({"created": { $gt: "9/30/2022" }})
+    // db.bookmarks.find({"created": { $gte: ISODate("2022-09-11") ,  $lt: ISODate("2022-09-12")}})
+    const nextDay = addDays(date, 1);
+    // console.log("*** DEBUG date: " + date.toISOString());
+    // console.log("*** DEBUG nextday: " + nextDay.toISOString());
     const bookmarks = await this.entityCollection
-      // .find({"tags": {"$elemMatch": {"name": tag}}})
-      .find()
+      .find(
+        {
+          "created": {
+            $gte: date,
+            $lt: nextDay
+          }
+        })
       .toArray();
     return bookmarks;
   }

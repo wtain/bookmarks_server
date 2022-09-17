@@ -26,9 +26,10 @@ router.get(BOOKMARKS_ENDPOINT_GETBYTAG + "/", async (req: Request<{tag: string}>
         .send(bookmarks);
 });
   
-router.get(BOOKMARKS_ENDPOINT_GETBYDATE + "/", async (req: Request<{date: string}>, res) => {
+router.get(BOOKMARKS_ENDPOINT_GETBYDATE + "/", async (req: Request<{ date: string }>, res) => {
+    const bookmarksDate = new Date(req.params.date);
     const bookmarks = await getBookmarksCollection(req)
-        .listByDate(req.params.date);
+        .listByDate(bookmarksDate);
     res
         .status(200)
         .send(bookmarks);
