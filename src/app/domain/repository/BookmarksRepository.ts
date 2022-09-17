@@ -15,6 +15,16 @@ class BookmarksRepository extends EntityRepository {
     return bookmarks;
   }
 
+  public async listByDate(date: string) {
+    // todo: implement
+    // db.bookmarks.find({"created": { $gt: "9/30/2022" }})
+    const bookmarks = await this.entityCollection
+      // .find({"tags": {"$elemMatch": {"name": tag}}})
+      .find()
+      .toArray();
+    return bookmarks;
+  }
+
   public async listTags() {
     const tags = await this.entityCollection
                     .aggregate([
