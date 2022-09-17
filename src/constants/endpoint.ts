@@ -20,3 +20,7 @@ export const BOOKMARKS_ENDPOINT_GETBYDATE = BOOKMARKS_ENDPOINT_BASE + "/bydate/:
 export const TAGS_ENDPOINT_BASE = BASE_ENDPOINT + "/tags";
 
 export const TAGS_ENDPOINT_SEARCH = TAGS_ENDPOINT_BASE + "/search/:substring";
+
+export const DATES_ENDPOINT_BASE = BASE_ENDPOINT + "/dates";
+
+export const DATES_ENDPOINT_RANGE = DATES_ENDPOINT_BASE + "/range/:date_start/:date_end";

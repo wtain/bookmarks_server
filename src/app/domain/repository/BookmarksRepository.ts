@@ -59,6 +59,23 @@ class BookmarksRepository extends EntityRepository {
                     ]).toArray();    
     return tags;
   }
+
+  public async listDates() {
+    const dates = await this.entityCollection
+                    .aggregate([
+                      { "$group": { _id: { date: { "$dateTrunc": { date: "$created", unit: "day" } } }, count: { $count: {} } } }
+                    ]).toArray();    
+    return dates;    
+  }
+
+  public async listDatesBetween(startDate: Date, endDate: Date) {
+    const dates = await this.entityCollection
+                    .aggregate([
+                      { "$match": {"created": {"$gte": startDate, "$lt": endDate } }},
+                      { "$group": { _id: { date: { "$dateTrunc": { date: "$created", unit: "day" } } }, count: { $count: {} } } }
+                    ]).toArray();
+    return dates;    
+  }
 }
 
 export default BookmarksRepository;

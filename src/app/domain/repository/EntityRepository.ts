@@ -1,5 +1,6 @@
 import { Application } from "express";
 import { Collection, MongoClient } from "mongodb";
+import { convert_dates } from "../../../utils/DateHelpers";
 import Entity from "./Entity";
 
 class EntityRepository {
@@ -19,12 +20,14 @@ class EntityRepository {
   }
 
   public async add(body: any) {
+    convert_dates(body);
     const result = await this.entityCollection
       .insertOne(body);
     return result;
   }
 
   public async update(body: Entity) {
+    convert_dates(body);
     const result = await this.entityCollection
       .updateOne(
         { "id": body.id },

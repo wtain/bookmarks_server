@@ -4,3 +4,11 @@ export function addDays(date: Date, days: number): Date {
   result.setDate(date.getDate() + days);
   return result;
 }
+
+export function convert_dates(body: any, fields: string[] = ["created", "updated"]) {
+  fields.forEach(field => {
+    if (body[field] !== undefined) {
+      body[field] = new Date(body[field]);
+    }
+  });
+}
