@@ -37,10 +37,11 @@ class EntityRepository {
   }
 
   public async list() {
-    const entity = await this.entityCollection
+    const entityList = await this.entityCollection
       .find()
+      .sort({"created": 1})
       .toArray();
-    return entity;
+    return entityList;
   }
 
   public async getById(id: string) {

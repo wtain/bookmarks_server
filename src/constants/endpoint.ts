@@ -24,3 +24,15 @@ export const TAGS_ENDPOINT_SEARCH = TAGS_ENDPOINT_BASE + "/search/:substring";
 export const DATES_ENDPOINT_BASE = BASE_ENDPOINT + "/dates";
 
 export const DATES_ENDPOINT_RANGE = DATES_ENDPOINT_BASE + "/range/:date_start/:date_end";
+
+export const COMMENTS_ENDPOINT_BASE = BASE_ENDPOINT + "/comments";
+
+export const COMMENTS_ENDPOINT_ADD = COMMENTS_ENDPOINT_BASE + "/add";
+
+export const COMMENTS_ENDPOINT_UPDATE = COMMENTS_ENDPOINT_BASE + "/update";
+
+export const COMMENTS_ENDPOINT_DELETE = COMMENTS_ENDPOINT_BASE + "/delete/:id";
+
+export const COMMENTS_ENDPOINT_GETBYID = BOOKMARKS_ENDPOINT_BASE + "/:id";
+
+export const COMMENTS_ENDPOINT_LISTBYBOOKMARKID = BOOKMARKS_ENDPOINT_GETBYID + "/comments";
