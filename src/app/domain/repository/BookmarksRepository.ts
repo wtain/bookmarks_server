@@ -63,7 +63,8 @@ class BookmarksRepository extends EntityRepository {
   public async listDates() {
     const dates = await this.entityCollection
                     .aggregate([
-                      { "$group": { _id: { date: { "$dateTrunc": { date: "$created", unit: "day" } } }, count: { $count: {} } } }
+                      { "$group": { _id: { date: { "$dateTrunc": { date: "$created", unit: "day" } } }, count: { $count: {} } } },
+                      { "$project": { "date": "$_id.date", "_id": 0, "count": 1 } }
                     ]).toArray();    
     return dates;    
   }
@@ -72,7 +73,8 @@ class BookmarksRepository extends EntityRepository {
     const dates = await this.entityCollection
                     .aggregate([
                       { "$match": {"created": {"$gte": startDate, "$lt": endDate } }},
-                      { "$group": { _id: { date: { "$dateTrunc": { date: "$created", unit: "day" } } }, count: { $count: {} } } }
+                      { "$group": { _id: { date: { "$dateTrunc": { date: "$created", unit: "day" } } }, count: { $count: {} } } },
+                      { "$project": { "date": "$_id.date", "_id": 0, "count": 1 } }
                     ]).toArray();
     return dates;    
   }
