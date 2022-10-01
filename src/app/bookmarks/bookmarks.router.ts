@@ -1,6 +1,6 @@
 
 import { Router, Request, Application } from 'express';
-import { BOOKMARKS_ENDPOINT_ADD, BOOKMARKS_ENDPOINT_BASE, BOOKMARKS_ENDPOINT_DELETE, BOOKMARKS_ENDPOINT_GETBYDATE, BOOKMARKS_ENDPOINT_GETBYID, BOOKMARKS_ENDPOINT_GETBYTAG, BOOKMARKS_ENDPOINT_UPDATE } from '../../constants/endpoint';
+import { BOOKMARKS_ENDPOINT_ADD, BOOKMARKS_ENDPOINT_BASE, BOOKMARKS_ENDPOINT_DELETE, BOOKMARKS_ENDPOINT_GETBYDATE, BOOKMARKS_ENDPOINT_GETBYID, BOOKMARKS_ENDPOINT_GETBYTAG, BOOKMARKS_ENDPOINT_SEARCH, BOOKMARKS_ENDPOINT_UPDATE } from '../../constants/endpoint';
 import { addCRUDEndpoints } from '../../utils/RouterHelper';
 import BookmarksRepository from '../domain/repository/BookmarksRepository';
 
@@ -34,3 +34,12 @@ router.get(BOOKMARKS_ENDPOINT_GETBYDATE + "/", async (req: Request<{ date: strin
         .status(200)
         .send(bookmarks);
 });
+
+router.get(BOOKMARKS_ENDPOINT_SEARCH + "/", async (req: Request<{query: string}>, res) => {
+    const bookmarks = await getBookmarksCollection(req)
+        .search(req.params.query);
+    res
+        .status(200)
+        .send(bookmarks);
+});
+

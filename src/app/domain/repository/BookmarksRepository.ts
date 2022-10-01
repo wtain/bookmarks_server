@@ -78,6 +78,18 @@ class BookmarksRepository extends EntityRepository {
                     ]).toArray();
     return dates;    
   }
+
+  public async search(query: string) {
+    const bookmarks = await this.entityCollection
+      .find({
+        "$or": [
+          { "summary": { "$regex": `.*${query}.*` } },
+          { "contents": { "$regex": `.*${query}.*` } }
+        ]
+      })
+      .toArray();
+    return bookmarks;
+  }
 }
 
 export default BookmarksRepository;

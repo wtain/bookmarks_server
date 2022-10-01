@@ -17,6 +17,8 @@ export const BOOKMARKS_ENDPOINT_GETBYID = BOOKMARKS_ENDPOINT_BASE + "/:id";
 
 export const BOOKMARKS_ENDPOINT_GETBYDATE = BOOKMARKS_ENDPOINT_BASE + "/bydate/:date";
 
+export const BOOKMARKS_ENDPOINT_SEARCH = BOOKMARKS_ENDPOINT_BASE + "/search/:query";
+
 export const TAGS_ENDPOINT_BASE = BASE_ENDPOINT + "/tags";
 
 export const TAGS_ENDPOINT_SEARCH = TAGS_ENDPOINT_BASE + "/search/:substring";
