@@ -1,6 +1,7 @@
 import { Application } from "express";
 import { BOOKMARKS_COLLECTION_NAME, DB_NAME } from "../../../constants/storage";
 import { addDays } from "../../../utils/DateHelpers";
+import BookmarksFilter from "../dto/BookmarksFilter";
 import EntityRepository from "./EntityRepository";
 
 class BookmarksRepository extends EntityRepository {
@@ -86,6 +87,73 @@ class BookmarksRepository extends EntityRepository {
           { "summary": { "$regex": `.*${query}.*` } },
           { "contents": { "$regex": `.*${query}.*` } }
         ]
+      })
+      .toArray();
+    return bookmarks;
+  }
+
+  private buildMongoFilters(filter: BookmarksFilter): any[] {
+    let result: any[] = [];
+    if (filter.summary !== null) {
+      result.push(
+        { "summary": { "$regex": `.*${filter.summary}.*` } }
+      );
+    }
+    if (filter.summary !== null) {
+      result.push(
+        { "contents": { "$regex": `.*${filter.description}.*` } }
+      );
+    }
+    if (filter.is_done !== null) {
+      result.push(
+        { "isDone": filter.is_done }
+      );
+    }
+
+    if (filter.created_from !== null && filter.created_to !== null) {
+      result.push(
+        { 
+          "created": {
+            $gte: filter.created_from,
+            $lte: filter.created_to
+          }
+        }
+      );
+    }
+    else if (filter.created_from !== null) {
+      result.push(
+        { 
+          "created": {
+            $gte: filter.created_from
+          }
+        }
+      );
+    }
+    else if (filter.created_to !== null) {
+      result.push(
+        { 
+          "created": {
+            $lte: filter.created_to
+          }
+        }
+      );
+    }
+
+    if (filter.tags.length > 0) {
+      result.push({
+        "$or": filter.tags.map(tag => {
+          new Object({ "tags": { "$elemMatch": { "name": tag } } })
+        })
+      });
+    }
+
+    return result;
+  }
+
+  public async filter(filter: BookmarksFilter) {
+    const bookmarks = await this.entityCollection
+      .find({
+        "$and": this.buildMongoFilters(filter)
       })
       .toArray();
     return bookmarks;

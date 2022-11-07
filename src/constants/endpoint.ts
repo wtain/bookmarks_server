@@ -19,6 +19,8 @@ export const BOOKMARKS_ENDPOINT_GETBYDATE = BOOKMARKS_ENDPOINT_BASE + "/bydate/:
 
 export const BOOKMARKS_ENDPOINT_SEARCH = BOOKMARKS_ENDPOINT_BASE + "/search/:query";
 
+export const BOOKMARKS_ENDPOINT_FILTER = BOOKMARKS_ENDPOINT_BASE + "/filter";
+
 export const TAGS_ENDPOINT_BASE = BASE_ENDPOINT + "/tags";
 
 export const TAGS_ENDPOINT_SEARCH = TAGS_ENDPOINT_BASE + "/search/:substring";

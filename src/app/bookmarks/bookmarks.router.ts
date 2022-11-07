@@ -1,8 +1,9 @@
 
 import { Router, Request, Application } from 'express';
-import { BOOKMARKS_ENDPOINT_ADD, BOOKMARKS_ENDPOINT_BASE, BOOKMARKS_ENDPOINT_DELETE, BOOKMARKS_ENDPOINT_GETBYDATE, BOOKMARKS_ENDPOINT_GETBYID, BOOKMARKS_ENDPOINT_GETBYTAG, BOOKMARKS_ENDPOINT_SEARCH, BOOKMARKS_ENDPOINT_UPDATE } from '../../constants/endpoint';
+import { BOOKMARKS_ENDPOINT_ADD, BOOKMARKS_ENDPOINT_BASE, BOOKMARKS_ENDPOINT_DELETE, BOOKMARKS_ENDPOINT_GETBYDATE, BOOKMARKS_ENDPOINT_GETBYID, BOOKMARKS_ENDPOINT_GETBYTAG, BOOKMARKS_ENDPOINT_SEARCH, BOOKMARKS_ENDPOINT_UPDATE, BOOKMARKS_ENDPOINT_FILTER } from '../../constants/endpoint';
 import { addCRUDEndpoints } from '../../utils/RouterHelper';
 import BookmarksRepository from '../domain/repository/BookmarksRepository';
+import BookmarksFilter from '../domain/dto/BookmarksFilter';
 
 export const router: Router = Router();
 
@@ -42,4 +43,14 @@ router.get(BOOKMARKS_ENDPOINT_SEARCH + "/", async (req: Request<{query: string}>
         .status(200)
         .send(bookmarks);
 });
+
+router.post(BOOKMARKS_ENDPOINT_FILTER, async (req: Request<BookmarksFilter>, res) => {
+    const bookmarks = await getBookmarksCollection(req)
+        .filter(req.params);
+    res
+        .status(200)
+        .send(bookmarks);
+});
+
+
 
