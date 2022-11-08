@@ -94,23 +94,23 @@ class BookmarksRepository extends EntityRepository {
 
   private buildMongoFilters(filter: BookmarksFilter): any[] {
     let result: any[] = [];
-    if (filter.summary !== null) {
+    if (filter.summary !== undefined) {
       result.push(
         { "summary": { "$regex": `.*${filter.summary}.*` } }
       );
     }
-    if (filter.summary !== null) {
+    if (filter.summary !== undefined) {
       result.push(
         { "contents": { "$regex": `.*${filter.description}.*` } }
       );
     }
-    if (filter.is_done !== null) {
+    if (filter.is_done !== undefined) {
       result.push(
         { "isDone": filter.is_done }
       );
     }
 
-    if (filter.created_from !== null && filter.created_to !== null) {
+    if (filter.created_from !== undefined && filter.created_to !== undefined) {
       result.push(
         { 
           "created": {
@@ -120,7 +120,7 @@ class BookmarksRepository extends EntityRepository {
         }
       );
     }
-    else if (filter.created_from !== null) {
+    else if (filter.created_from !== undefined) {
       result.push(
         { 
           "created": {
@@ -129,7 +129,7 @@ class BookmarksRepository extends EntityRepository {
         }
       );
     }
-    else if (filter.created_to !== null) {
+    else if (filter.created_to !== undefined) {
       result.push(
         { 
           "created": {
@@ -139,10 +139,13 @@ class BookmarksRepository extends EntityRepository {
       );
     }
 
-    if (filter.tags.length > 0) {
+    if (filter.tags !== undefined && filter.tags.length > 0) {
+      console.log(`Filtering tags: ${filter.tags}`);
       result.push({
-        "$or": filter.tags.map(tag => {
-          new Object({ "tags": { "$elemMatch": { "name": tag } } })
+        "$and": filter.tags.map(tag => {
+          return {
+            "tags": { "$elemMatch": { "name": tag } }
+          }
         })
       });
     }
@@ -150,12 +153,36 @@ class BookmarksRepository extends EntityRepository {
     return result;
   }
 
+  /*
+    Testing:
+      curl -X POST http://192.168.1.38:8081/api/bookmarks/filter -d '{}'
+
+      curl -X POST -H "Content-Type: application/json" -d "{\"page_size\":1,\"start\":0}" http://192.168.1.38:8081/api/bookmarks/filter
+
+      curl -X POST -H "Content-Type: application/json" -d "{\"page_size\":1,\"start\":0,\"tags\":[\"UI\"]}" http://192.168.1.38:8081/api/bookmarks/filter
+
+      curl -X POST -H "Content-Type: application/json" -d "{\"page_size\":1,\"start\":0,\"tags\":[\"UI\",\"Bookmarks\"]}" http://192.168.1.38:8081/api/bookmarks/filter
+  */
+
   public async filter(filter: BookmarksFilter) {
-    const bookmarks = await this.entityCollection
-      .find({
-        "$and": this.buildMongoFilters(filter)
-      })
-      .toArray();
+    // todo: + pagination
+    const mongoFilters = this.buildMongoFilters(filter);
+    const mongoFilter = mongoFilters.length > 0 ? {
+      "$and": mongoFilters
+    } : {};
+    console.log(`Filtering: ${JSON.stringify(mongoFilter)}`);
+    let cursor = await this.entityCollection
+      .find(mongoFilter);
+  
+    if (filter.start !== undefined) {
+      cursor = await cursor.skip(filter.start!);
+    }
+
+    if (filter.page_size !== undefined) {
+      cursor = await cursor.limit(filter.page_size!);
+    }
+    
+    const bookmarks = await cursor.toArray();
     return bookmarks;
   }
 }

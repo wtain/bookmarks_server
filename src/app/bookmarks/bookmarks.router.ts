@@ -44,9 +44,11 @@ router.get(BOOKMARKS_ENDPOINT_SEARCH + "/", async (req: Request<{query: string}>
         .send(bookmarks);
 });
 
-router.post(BOOKMARKS_ENDPOINT_FILTER, async (req: Request<BookmarksFilter>, res) => {
+router.post(BOOKMARKS_ENDPOINT_FILTER, async (req, res) => {
+    const req_typed = <BookmarksFilter>req.body;
+    console.log(`Got filter request ${JSON.stringify(req_typed)}`);
     const bookmarks = await getBookmarksCollection(req)
-        .filter(req.params);
+        .filter(req_typed);
     res
         .status(200)
         .send(bookmarks);
