@@ -6,6 +6,7 @@ interface BookmarksFilter {
   created_to: Date | null;
   is_done: boolean | null;
   tags: string[];
+  tags_all: boolean | null;
   start: number | null;
   page_size: number | null;
 }

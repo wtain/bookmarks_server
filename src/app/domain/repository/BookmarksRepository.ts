@@ -140,14 +140,22 @@ class BookmarksRepository extends EntityRepository {
     }
 
     if (filter.tags !== undefined && filter.tags.length > 0) {
-      console.log(`Filtering tags: ${filter.tags}`);
-      result.push({
-        "$and": filter.tags.map(tag => {
-          return {
-            "tags": { "$elemMatch": { "name": tag } }
-          }
-        })
+
+      const tags_all = filter.tags_all !== undefined && filter.tags_all;
+
+      const filters_mapped = filter.tags.map(tag => {
+        return {
+          "tags": { "$elemMatch": { "name": tag } }
+        }
       });
+
+      console.log(`Filtering tags: ${filter.tags}`);
+      if (tags_all) {
+        result.push({ "$and": filters_mapped });
+      }
+      else {
+        result.push({ "$or": filters_mapped });
+      }
     }
 
     return result;
@@ -162,28 +170,34 @@ class BookmarksRepository extends EntityRepository {
       curl -X POST -H "Content-Type: application/json" -d "{\"page_size\":1,\"start\":0,\"tags\":[\"UI\"]}" http://192.168.1.38:8081/api/bookmarks/filter
 
       curl -X POST -H "Content-Type: application/json" -d "{\"page_size\":1,\"start\":0,\"tags\":[\"UI\",\"Bookmarks\"]}" http://192.168.1.38:8081/api/bookmarks/filter
+
+      curl -X POST -H "Content-Type: application/json" -d "{\"page_size\":10,\"start\":0,\"tags\":[\"UI\",\"Bookmarks\"],\"tags_all\":true}" http://192.168.1.38:8081/api/bookmarks/filter
+
+      curl -X POST -H "Content-Type: application/json" -d "{\"page_size\":10,\"start\":0,\"tags\":[\"UI\",\"Bookmarks\"],\"tags_all\":true,\"is_done\":false}" http://192.168.1.38:8081/api/bookmarks/filter
   */
 
   public async filter(filter: BookmarksFilter) {
-    // todo: + pagination
     const mongoFilters = this.buildMongoFilters(filter);
     const mongoFilter = mongoFilters.length > 0 ? {
       "$and": mongoFilters
     } : {};
     console.log(`Filtering: ${JSON.stringify(mongoFilter)}`);
-    let cursor = await this.entityCollection
+
+    let cursor = this.entityCollection
       .find(mongoFilter);
+    
+    const count = await cursor.count();
   
     if (filter.start !== undefined) {
-      cursor = await cursor.skip(filter.start!);
+      cursor = cursor.skip(filter.start!);
     }
 
     if (filter.page_size !== undefined) {
-      cursor = await cursor.limit(filter.page_size!);
+      cursor = cursor.limit(filter.page_size!);
     }
     
     const bookmarks = await cursor.toArray();
-    return bookmarks;
+    return { bookmarks, count };
   }
 }
 
