@@ -141,7 +141,10 @@ class BookmarksRepository extends EntityRepository {
 
     if (filter.tags !== undefined && filter.tags.length > 0) {
 
-      const tags_all = filter.tags_all !== undefined && filter.tags_all;
+      const tags_all = filter.tags_all !== undefined && filter.tags_all !== null && filter.tags_all;
+
+      console.log(`tags_all = ${tags_all}`);
+      console.log(`filter.tags_all = ${filter.tags_all}`);
 
       const filters_mapped = filter.tags.map(tag => {
         return {
