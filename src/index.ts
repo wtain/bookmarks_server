@@ -5,6 +5,8 @@ import { DB_CONN_STRING } from './constants/storage';
 import * as http from 'http';
 import WebSocket from "ws";
 
+// todo: Logger + log with timestamps
+
 const port = Number(process.env.PORT || config.PORT || 8080);
 
 MongoClient.connect(process.env.DATABASE || DB_CONN_STRING, (err, db) => {
