@@ -5,7 +5,7 @@ export function addDays(date: Date, days: number): Date {
   return result;
 }
 
-export function convert_dates(body: any, fields: string[] = ["created", "updated"]) {
+export function convert_dates(body: any, fields: string[] = ["created", "updated", "timestamp"]) {
   fields.forEach(field => {
     if (body[field] !== undefined) {
       body[field] = new Date(body[field]);

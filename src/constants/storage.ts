@@ -3,6 +3,7 @@ export const DB_CONN_STRING = "mongodb://localhost:27017"
 export const DB_NAME = "bookmarks_store"
 export const BOOKMARKS_COLLECTION_NAME = "bookmarks"
 export const COMMENTS_COLLECTION_NAME = "comments"
+export const URLS_COLLECTION_NAME = "urls";
 
 /*
 
