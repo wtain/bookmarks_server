@@ -6,6 +6,7 @@ Install Typescript
 npm install -g typescript
 ```
 
+#### On Windows
 Add path to NPM bin to user environment variables:
 (Windows) Add to ``PATH`` value ``C:\Users\<USER_NAME_HERE>\AppData\Roaming\npm``
 
