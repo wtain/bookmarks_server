@@ -4,6 +4,8 @@ export const DB_NAME = "bookmarks_store"
 export const BOOKMARKS_COLLECTION_NAME = "bookmarks"
 export const COMMENTS_COLLECTION_NAME = "comments"
 export const URLS_COLLECTION_NAME = "urls";
+export const USERS_COLLECTION_NAME = "users";
+export const ROLES_COLLECTION_NAME = "roles";
 
 /*
 

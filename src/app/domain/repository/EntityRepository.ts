@@ -13,6 +13,8 @@ class EntityRepository {
     this.entityCollection = bmdb.collection(collectionName);
   }
 
+  // todo: soft delete
+
   public async delete(id: string) {
     const result = await this.entityCollection
       .deleteOne({ "id": id });

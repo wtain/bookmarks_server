@@ -44,3 +44,31 @@ export const COMMENTS_ENDPOINT_LISTBYBOOKMARKID = BOOKMARKS_ENDPOINT_GETBYID + "
 export const URLS_ENDPOINT_BASE = BASE_ENDPOINT + "/urls";
 
 export const URLS_ENDPOINT_TITLE = URLS_ENDPOINT_BASE + "/title";
+
+// Users
+
+export const USERS_ENDPOINT_BASE = BASE_ENDPOINT + "/users";
+
+export const USERS_ENDPOINT_LIST = USERS_ENDPOINT_BASE + "/";
+
+export const USERS_ENDPOINT_ADD = USERS_ENDPOINT_BASE + "/add";
+
+export const USERS_ENDPOINT_EDIT = USERS_ENDPOINT_BASE + "/edit";
+
+export const USERS_ENDPOINT_DELETE = USERS_ENDPOINT_BASE + "/delete";
+
+export const USERS_ENDPOINT_GETBYID = USERS_ENDPOINT_BASE + "/:id";
+
+// Roles
+
+export const ROLES_ENDPOINT_BASE = BASE_ENDPOINT + "/roles";
+
+export const ROLES_ENDPOINT_LIST = ROLES_ENDPOINT_BASE + "/";
+
+export const ROLES_ENDPOINT_ADD = ROLES_ENDPOINT_BASE + "/add";
+
+export const ROLES_ENDPOINT_EDIT = ROLES_ENDPOINT_BASE + "/edit";
+
+export const ROLES_ENDPOINT_DELETE = ROLES_ENDPOINT_BASE + "/delete";
+
+export const ROLES_ENDPOINT_GETBYID = ROLES_ENDPOINT_BASE + "/:id";
