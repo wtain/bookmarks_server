@@ -42,3 +42,13 @@ curl -X DELETE http://127.0.0.1:8080/api/bookmarks/delete/0000
 ```
 curl -X POST -H "Content-Type: application/json" -d "{\"id\": \"0000\", \"name\": \"First bookmark\" }" http://127.0.0.1:8080/api/bookmarks/add
 ```
+
+
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"username\": \"ramiz\", \"password\": \"Tt6_wW3#\"}" http://127.0.0.1:8081/api/auth/register
+```
+
+
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"username\": \"ramiz\", \"password\": \"Tt6_wW3#\"}" http://127.0.0.1:8081/api/auth/login
+```

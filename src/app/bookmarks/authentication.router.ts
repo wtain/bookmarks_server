@@ -1,5 +1,5 @@
 import { Application, Router, Request } from "express";
-import { AUTHENTICATION_ENDPOINT_LOGIN, AUTHENTICATION_ENDPOINT_LOGOUT } from "../../constants/endpoint";
+import { AUTHENTICATION_ENDPOINT_LOGIN, AUTHENTICATION_ENDPOINT_LOGOUT, AUTHENTICATION_ENDPOINT_REGISTER } from "../../constants/endpoint";
 import SecurityHelper from "../../utils/SecurityHelper";
 import SessionsRepository from "../domain/repository/SessionRepository";
 import { getUsersCollection } from "./users.router";
@@ -13,9 +13,54 @@ interface LoginRequest {
     password: string;
 }
 
+interface RegisterRequest {
+    fullName: string;
+    username: string;
+    password: string;
+}
+
 export function getSessionsCollection(req: { app: Application }): SessionsRepository {
     return new SessionsRepository(req.app);
 }
+
+router.post(AUTHENTICATION_ENDPOINT_REGISTER, async (req, res) => {
+    const registerRequest = <RegisterRequest>req.body;
+    const usersCollection = getUsersCollection(req);
+
+    if (!SecurityHelper.validateUsername(registerRequest.username)) {
+        res
+            .status(403)
+            .send(`Invalid user name ${registerRequest.username}`);
+        return;
+    }
+
+    if (!SecurityHelper.validatePassword(registerRequest.password)) {
+        res
+            .status(403)
+            .send("Invalid password");
+        return;
+    }
+
+    const existingUser = await usersCollection.getByName(registerRequest.username);
+    if (existingUser) {
+        res
+            .status(403)
+            .send(`User with name ${registerRequest.username} already exists`);
+        return;
+    }
+
+    await usersCollection.add({
+        name: registerRequest.username,
+        id: uuidv4(),
+        fullName: registerRequest.fullName,
+        passwordHash: SecurityHelper.getPasswordHash(registerRequest.password),
+        registeredAt: Date(),
+        roles: []
+    })
+    res
+        .status(200)
+        .send(`Success`);
+});
 
 router.post(AUTHENTICATION_ENDPOINT_LOGIN, async (req, res) => {
     const loginRequest = <LoginRequest>req.body;
@@ -29,7 +74,7 @@ router.post(AUTHENTICATION_ENDPOINT_LOGIN, async (req, res) => {
         return;
     }
 
-    if (SecurityHelper.getPasswordHash(loginRequest.password) !== user.passwordHash) {
+    if (SecurityHelper.verifyPassword(loginRequest.password, user.passwordHash)) {
         res
             .status(404)
             .send(`Wrong password for user ${loginRequest.username}`);
