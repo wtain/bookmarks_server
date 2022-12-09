@@ -52,3 +52,7 @@ curl -X POST -H "Content-Type: application/json" -d "{\"username\": \"ramiz\", \
 ```
 curl -X POST -H "Content-Type: application/json" -d "{\"username\": \"ramiz\", \"password\": \"Tt6_wW3#\"}" http://127.0.0.1:8081/api/auth/login
 ```
+
+```
+curl -X GET "http://127.0.0.1:8081/api/auth/logout?sessionToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJhbWl6IiwiaWF0IjoxNjcwNjI2MTI0fQ.CRVkp9pR982O46MABX-76Iwgs4cAC-sDNaP4guIuOf0&userName=ramiz"
+```

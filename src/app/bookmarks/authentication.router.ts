@@ -74,7 +74,7 @@ router.post(AUTHENTICATION_ENDPOINT_LOGIN, async (req, res) => {
         return;
     }
 
-    if (SecurityHelper.verifyPassword(loginRequest.password, user.passwordHash)) {
+    if (!SecurityHelper.verifyPassword(loginRequest.password, user.passwordHash)) {
         res
             .status(404)
             .send(`Wrong password for user ${loginRequest.username}`);
@@ -101,24 +101,26 @@ router.post(AUTHENTICATION_ENDPOINT_LOGIN, async (req, res) => {
         .send(sessionToken);
   });
 
-router.get(AUTHENTICATION_ENDPOINT_LOGOUT, async (req: Request<{sessionToken: string, userName: string}>, res) => {
+router.get(AUTHENTICATION_ENDPOINT_LOGOUT, async (req: Request, res) => {
+    const sessionToken = <string>req.query['sessionToken'];
+    const userName = <string>req.query['userName'];
     const sessionsRepository = getSessionsCollection(req);
-    const session = await sessionsRepository.getBySessionToken(req.params.sessionToken);
+    const session = await sessionsRepository.getBySessionToken(sessionToken);
     if (!session) {
         res
             .status(404)
-            .send(`Session with token '${req.params.sessionToken}' not found`);
+            .send(`Session with token '${sessionToken}' not found`);
         return;
     }
-    if (session.userName !== req.params.userName) {
+    if (session.userName !== userName) {
         res
             .status(403)
-            .send(`Session with token '${req.params.sessionToken}' does not belong to the user ${req.params.userName}`);
+            .send(`Session with token '${sessionToken}' does not belong to the user ${userName}`);
         return;
     }
     sessionsRepository.delete(session.id);
     res
         .status(200)
-        .send(`Session with token '${req.params.sessionToken}' has been terminated`);
+        .send(`Session with token '${sessionToken}' has been terminated`);
 });
  
