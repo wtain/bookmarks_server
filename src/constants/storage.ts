@@ -6,6 +6,7 @@ export const COMMENTS_COLLECTION_NAME = "comments"
 export const URLS_COLLECTION_NAME = "urls";
 export const USERS_COLLECTION_NAME = "users";
 export const ROLES_COLLECTION_NAME = "roles";
+export const SESSIONS_COLLECTION_NAME = "sessions";
 
 /*
 

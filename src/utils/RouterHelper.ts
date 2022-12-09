@@ -31,19 +31,19 @@ export function addCRUDEndpoints(router: Router, crudEndpoints: CrudEndpoints, r
   });
 
   router.get(crudEndpoints.list, async (req, res) => {
-    const bookmarks = await repositoryProvider(req)
+    const collection = await repositoryProvider(req)
         .list();
     res
         .status(200)
-        .send(bookmarks);
+        .send(collection);
   });
     
   router.get(crudEndpoints.get, async (req: Request<Entity>, res) => {
-    const bookmark = await repositoryProvider(req)
+    const item = await repositoryProvider(req)
         .getById(req.params.id);
     res
         .status(200)
-        .send(bookmark);
+        .send(item);
   });
 
 }

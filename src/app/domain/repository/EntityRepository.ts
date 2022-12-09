@@ -3,7 +3,7 @@ import { Collection, MongoClient } from "mongodb";
 import { convert_dates } from "../../../utils/DateHelpers";
 import Entity from "./Entity";
 
-class EntityRepository {
+class EntityRepository<T extends Entity = Entity> {
 
   protected entityCollection: Collection;
 
@@ -28,7 +28,7 @@ class EntityRepository {
     return result;
   }
 
-  public async update(body: Entity) {
+  public async update(body: T) {
     convert_dates(body);
     const result = await this.entityCollection
       .updateOne(
@@ -43,13 +43,19 @@ class EntityRepository {
       .find()
       .sort({"created": 1})
       .toArray();
-    return entityList;
+    return <T[]><unknown>entityList;
   }
 
   public async getById(id: string) {
-    const bookmark = await this.entityCollection
+    const entity = await this.entityCollection
       .findOne({ "id": id });
-    return bookmark;
+    return <T><unknown>entity;
+  }
+
+  public async getByName(name: string) {
+    const entity = await this.entityCollection
+      .findOne({ "name": name });
+    return <T><unknown>entity;
   }
 }
 
