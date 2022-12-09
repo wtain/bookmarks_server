@@ -4,6 +4,8 @@ import config from "../constants/config";
 
 export default class SecurityHelper {
 
+    // todo: tests for all of that
+
     public static getPasswordHash(password: string): string {
         return generate(password);
     }
@@ -12,5 +14,10 @@ export default class SecurityHelper {
         return jwt.sign({
             userName
         }, config.jwtSecret);
+    }
+
+    public static validateUsername(userName: string): boolean {
+        const regexp = new RegExp(/^\w+$/gs);
+        return regexp.test(userName) && userName.length <= 32;
     }
 }

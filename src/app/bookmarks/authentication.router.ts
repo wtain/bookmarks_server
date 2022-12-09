@@ -1,5 +1,5 @@
-import { Application, Router } from "express";
-import { AUTHENTICATION_ENDPOINT_LOGIN } from "../../constants/endpoint";
+import { Application, Router, Request } from "express";
+import { AUTHENTICATION_ENDPOINT_LOGIN, AUTHENTICATION_ENDPOINT_LOGOUT } from "../../constants/endpoint";
 import SecurityHelper from "../../utils/SecurityHelper";
 import SessionsRepository from "../domain/repository/SessionRepository";
 import { getUsersCollection } from "./users.router";
@@ -26,15 +26,17 @@ router.post(AUTHENTICATION_ENDPOINT_LOGIN, async (req, res) => {
         res
             .status(404)
             .send(`User ${loginRequest.username} not found`);
+        return;
     }
 
     if (SecurityHelper.getPasswordHash(loginRequest.password) !== user.passwordHash) {
         res
             .status(404)
             .send(`Wrong password for user ${loginRequest.username}`);
+        return;
     }
 
-    const sessionsRepository = await getSessionsCollection(req);
+    const sessionsRepository = getSessionsCollection(req);
 
     const sessionToken = SecurityHelper.generateSessionToken(loginRequest.username);
 
@@ -46,10 +48,32 @@ router.post(AUTHENTICATION_ENDPOINT_LOGIN, async (req, res) => {
         token: sessionToken
     };
 
-    sessionsRepository.add(session);
+    await sessionsRepository.add(session);
 
     res
         .status(200)
         .cookie("SessionToken", sessionToken)
         .send(sessionToken);
   });
+
+router.get(AUTHENTICATION_ENDPOINT_LOGOUT, async (req: Request<{sessionToken: string, userName: string}>, res) => {
+    const sessionsRepository = getSessionsCollection(req);
+    const session = await sessionsRepository.getBySessionToken(req.params.sessionToken);
+    if (!session) {
+        res
+            .status(404)
+            .send(`Session with token '${req.params.sessionToken}' not found`);
+        return;
+    }
+    if (session.userName !== req.params.userName) {
+        res
+            .status(403)
+            .send(`Session with token '${req.params.sessionToken}' does not belong to the user ${req.params.userName}`);
+        return;
+    }
+    sessionsRepository.delete(session.id);
+    res
+        .status(200)
+        .send(`Session with token '${req.params.sessionToken}' has been terminated`);
+});
+ 
