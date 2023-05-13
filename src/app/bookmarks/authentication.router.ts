@@ -76,7 +76,7 @@ router.post(AUTHENTICATION_ENDPOINT_LOGIN, async (req, res) => {
 
     if (!SecurityHelper.verifyPassword(loginRequest.password, user.passwordHash)) {
         res
-            .status(404)
+            .status(403)
             .send(`Wrong password for user ${loginRequest.username}`);
         return;
     }
